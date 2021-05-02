@@ -1,4 +1,5 @@
 import { Button, Input } from "@chakra-ui/react"
+import axios from "axios"
 import React from "react"
 import { useForm } from "react-hook-form"
 
@@ -9,7 +10,17 @@ const LoginSection: React.VFC = () => {
   }>()
 
   const onSubmit = handleSubmit((form) => {
-    console.log(form)
+    axios
+      .post<{
+        data: {
+          code: string
+          result: string
+        }
+      }>(`${process.env.REACT_APP_BACKEND}/login`, form)
+      .then(({ data }) => {
+        console.log(data)
+      })
+      .catch((err) => console.error(err))
   })
 
   return (
