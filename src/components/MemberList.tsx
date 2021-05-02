@@ -6,11 +6,10 @@ const MemberList: React.VFC = () => {
     id: string
     username: string
     password: string
-    email: string
   }[] = [
-    { id: "1", username: "username", password: "password", email: "email" },
-    { id: "2", username: "username", password: "password", email: "email" },
-    { id: "3", username: "username", password: "password", email: "email" },
+    { id: "1", username: "username", password: "password" },
+    { id: "2", username: "username", password: "password" },
+    { id: "3", username: "username", password: "password" },
   ]
 
   return (
@@ -30,7 +29,6 @@ const MemberList: React.VFC = () => {
               <Td>{v.id}</Td>
               <Td>{v.username}</Td>
               <Td>{v.password}</Td>
-              <Td>{v.email}</Td>
             </Tr>
           ))}
         </Tbody>
