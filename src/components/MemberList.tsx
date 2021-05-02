@@ -1,17 +1,25 @@
-import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
+import { gql, useQuery } from "@apollo/client"
+import { Spinner, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
 import React from "react"
+import schemas from "../../schemas"
 
 const MemberList: React.VFC = () => {
-  const users: {
-    id: string
-    username: string
-    password: string
-    email: string
-  }[] = [
-    { id: "1", username: "username", password: "password", email: "email" },
-    { id: "2", username: "username", password: "password", email: "email" },
-    { id: "3", username: "username", password: "password", email: "email" },
-  ]
+  const { loading, error, data } = useQuery<schemas.GET_USERS>(gql`
+    query GET_USERS {
+      user {
+        id
+        username
+        password
+        role
+      }
+    }
+  `)
+
+  if (loading || !!error || !data) {
+    return <Spinner />
+  }
+
+  const users = data.user
 
   return (
     <section className="w-3/5">
@@ -21,16 +29,16 @@ const MemberList: React.VFC = () => {
             <Th>id</Th>
             <Th>username</Th>
             <Th>password</Th>
-            <Th>email</Th>
+            <Th>role</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {users.map((v) => (
-            <Tr key={v.id}>
-              <Td>{v.id}</Td>
-              <Td>{v.username}</Td>
-              <Td>{v.password}</Td>
-              <Td>{v.email}</Td>
+          {users.map((user) => (
+            <Tr key={user.id}>
+              <Td>{user.id}</Td>
+              <Td>{user.username}</Td>
+              <Td>{user.password}</Td>
+              <Td>{user.role}</Td>
             </Tr>
           ))}
         </Tbody>
