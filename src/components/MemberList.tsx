@@ -10,7 +10,6 @@ const MemberList: React.VFC = () => {
         id
         username
         password
-        role
       }
     }
   `)

@@ -48,7 +48,6 @@ const LoginSection: React.VFC<{
       }>(`${process.env.REACT_APP_BACKEND}/login`, form)
       .then(({ data }) => {
         onClientSet?.(createApolloClient(data.result.token))
-        console.log(data)
       })
       .catch((err) => console.error(err))
   })
