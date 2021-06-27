@@ -1,10 +1,22 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client"
 import React, { useState } from "react"
+import { useEffect } from "react"
 import LoginSection from "./components/LoginSection"
 import MemberList from "./components/MemberList"
 
 export const App: React.VFC = () => {
-  const [authToken, setAuthToken] = useState<string | null>(null)
+  const initialToken =
+    localStorage.getItem("authToken") === "null"
+      ? null
+      : localStorage.getItem("authToken")
+
+  const [authToken, setAuthToken] = useState<string | null>(initialToken)
+
+  useEffect(() => {
+    if (authToken) {
+      localStorage.setItem("authToken", authToken)
+    }
+  }, [authToken])
 
   return (
     <main className="h-screen grid place-items-center">
