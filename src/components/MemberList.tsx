@@ -1,9 +1,20 @@
 import { gql, useQuery } from "@apollo/client"
-import { Spinner, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
+import {
+  Button,
+  Spinner,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react"
 import React from "react"
 import schemas from "../../schemas"
 
-const MemberList: React.VFC = () => {
+const MemberList: React.VFC<{
+  onTokenSet?: (authToken: null) => void
+}> = ({ onTokenSet }) => {
   const { loading, error, data } = useQuery<schemas.GET_USERS>(gql`
     query GET_USERS {
       user {
@@ -22,6 +33,14 @@ const MemberList: React.VFC = () => {
 
   return (
     <section className="w-3/5">
+      <Button
+        onClick={() => {
+          onTokenSet?.(null)
+          localStorage.removeItem("authToken")
+        }}
+      >
+        Logout
+      </Button>
       <Table size="md" variant="simple">
         <Thead>
           <Tr>

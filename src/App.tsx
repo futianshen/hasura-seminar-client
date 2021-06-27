@@ -5,6 +5,22 @@ import LoginSection from "./components/LoginSection"
 import MemberList from "./components/MemberList"
 
 export const App: React.VFC = () => {
+  const { apolloClient, onTokenSet } = useApolloClient()
+
+  return (
+    <main className="h-screen grid place-items-center">
+      {apolloClient ? (
+        <ApolloProvider client={apolloClient}>
+          <MemberList onTokenSet={onTokenSet} />
+        </ApolloProvider>
+      ) : (
+        <LoginSection onTokenSet={onTokenSet} />
+      )}
+    </main>
+  )
+}
+
+const useApolloClient = () => {
   const initialToken =
     localStorage.getItem("authToken") === "null"
       ? null
@@ -18,25 +34,16 @@ export const App: React.VFC = () => {
     }
   }, [authToken])
 
-  return (
-    <main className="h-screen grid place-items-center">
-      {authToken ? (
-        <ApolloProvider
-          client={
-            new ApolloClient({
-              uri: process.env.REACT_APP_HASURA_URI,
-              cache: new InMemoryCache(),
-              headers: {
-                Authorization: `Bearer ${authToken}`,
-              },
-            })
-          }
-        >
-          <MemberList />
-        </ApolloProvider>
-      ) : (
-        <LoginSection onClientSet={(authToken) => setAuthToken(authToken)} />
-      )}
-    </main>
-  )
+  return {
+    apolloClient:
+      authToken &&
+      new ApolloClient({
+        uri: process.env.REACT_APP_HASURA_URI,
+        cache: new InMemoryCache(),
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }),
+    onTokenSet: (authToken: string | null) => setAuthToken(authToken),
+  }
 }

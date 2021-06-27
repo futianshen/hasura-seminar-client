@@ -1,27 +1,13 @@
-import {
-  ApolloClient,
-  InMemoryCache,
-  NormalizedCacheObject,
-} from "@apollo/client"
 import { Button, Input } from "@chakra-ui/react"
+import { yupResolver } from "@hookform/resolvers/yup"
 import axios from "axios"
 import React from "react"
 import { useForm } from "react-hook-form"
 import { object, string } from "yup"
-import { yupResolver } from "@hookform/resolvers/yup"
-
-export const createApolloClient = (token: string) =>
-  new ApolloClient({
-    uri: process.env.REACT_APP_HASURA_URI,
-    cache: new InMemoryCache(),
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
 
 const LoginSection: React.VFC<{
-  onClientSet?: (authToken: string) => void
-}> = ({ onClientSet }) => {
+  onTokenSet?: (authToken: string) => void
+}> = ({ onTokenSet }) => {
   const {
     register,
     handleSubmit,
@@ -47,7 +33,7 @@ const LoginSection: React.VFC<{
         }
       }>(`${process.env.REACT_APP_BACKEND}/login`, form)
       .then(({ data }) => {
-        onClientSet?.(data.result.token)
+        onTokenSet?.(data.result.token)
       })
       .catch((err) => console.error(err))
   })
