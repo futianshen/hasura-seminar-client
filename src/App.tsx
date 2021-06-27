@@ -1,26 +1,29 @@
-import {
-  ApolloClient,
-  ApolloProvider,
-  NormalizedCacheObject,
-} from "@apollo/client"
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client"
 import React, { useState } from "react"
 import LoginSection from "./components/LoginSection"
 import MemberList from "./components/MemberList"
 
 export const App: React.VFC = () => {
-  const [
-    client,
-    setClient,
-  ] = useState<ApolloClient<NormalizedCacheObject> | null>(null)
+  const [authToken, setAuthToken] = useState<string | null>(null)
 
   return (
     <main className="h-screen grid place-items-center">
-      {client ? (
-        <ApolloProvider client={client}>
+      {authToken ? (
+        <ApolloProvider
+          client={
+            new ApolloClient({
+              uri: process.env.REACT_APP_HASURA_URI,
+              cache: new InMemoryCache(),
+              headers: {
+                Authorization: `Bearer ${authToken}`,
+              },
+            })
+          }
+        >
           <MemberList />
         </ApolloProvider>
       ) : (
-        <LoginSection onClientSet={(client) => setClient(client)} />
+        <LoginSection onClientSet={(authToken) => setAuthToken(authToken)} />
       )}
     </main>
   )

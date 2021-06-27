@@ -20,7 +20,7 @@ export const createApolloClient = (token: string) =>
   })
 
 const LoginSection: React.VFC<{
-  onClientSet?: (client: ApolloClient<NormalizedCacheObject>) => void
+  onClientSet?: (authToken: string) => void
 }> = ({ onClientSet }) => {
   const {
     register,
@@ -47,7 +47,7 @@ const LoginSection: React.VFC<{
         }
       }>(`${process.env.REACT_APP_BACKEND}/login`, form)
       .then(({ data }) => {
-        onClientSet?.(createApolloClient(data.result.token))
+        onClientSet?.(data.result.token)
       })
       .catch((err) => console.error(err))
   })
